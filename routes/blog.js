@@ -13,8 +13,21 @@ router.get("/", function (req, res) {
   res.redirect("/posts");
 });
 
-router.get("/posts", function (req, res) {
-  res.render("posts-list");
+router.get("/posts", async function (req, res) {
+  const posts = await db
+    .getDb()
+    .collection("posts")
+    .find({}, { title: 1, summary: 1, "author.name": 1 })
+    .toArray();
+  // This will output all the author documents as an JavaScript Array
+  // We can use the feature called projection to limit the amount of data that is fetched for every document.
+  // In order to do projection, we can tune the find() method by passing the second parameter value
+  // which allow us to decide which "data" we wanna fetch. "1" in title: 1 means we wanna include title as a data.
+  // as author name is a nested field, we can add it like this => "author.name": 1
+  // The first parameter would define how we wanna "filter" the data we want to fetch.
+  // As we don't wanna filter and we want to have all the documents, we can pass {} as the first parameter value.
+  res.render("posts-list", { posts: posts });
+  // posts: posts will make the posts data available on posts-list.ejs
 });
 
 router.get("/new-post", async function (req, res) {
