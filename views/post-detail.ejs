@@ -19,10 +19,14 @@
           <!-- mailto: is a keyword that's used to open the mail client automatically. -->
           <!-- author_email and author_name are alias we defined on the sql query on the "/posts/:id" router. -->
         </address>
-        | <time datetime="<%= post.title %>"><%= post.date%></time>
+        | <time datetime="<%= post.date %>"><%= post.humanReadableDate %></time>
         <!-- We need to add | before creating the time element. -->
         <!-- "time" is an element used to output datetime information. -->
         <!-- datetime= attribute will hold the "machine readable" date -->
+        <!-- post.humanReadableDate which is between the time element will hold the "human readable" date we -->
+        <!-- created on the posts/:id route. -->
+        <!-- post.date is the machine readable date created from post.date = post.date.toISOString(); -->
+        <!-- on the posts/:id route. -->
       </section>
       <hr />
       <section>

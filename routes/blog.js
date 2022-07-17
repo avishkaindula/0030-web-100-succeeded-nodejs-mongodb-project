@@ -128,6 +128,25 @@ router.get("/posts/:id", async function (req, res) {
   }
   // This will handle the case when a user enter an url that doesn't exist.
 
+  // console.log(post.date);
+  // What we have here is a JS date object created from date: new Date(),
+  // So we can do whatever we can do to JS date objects also to this.
+  post.humanReadableDate = post.date.toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+  // In order to create a human readable date, We should create a new method for 
+  // post. named .humanReadableDate like this.
+  // We can refer MDN Docs to find out which values support which keys.
+  // post.date in post.date.toLocaleDateString is the original date data stored in posts documents.
+  // toLocaleDateString() will transform the date into a string that is human readable.
+  // Now we can use post.humanReadableDate inside post-detail.ejs
+  post.date = post.date.toISOString();
+  // toISOString() will convert the date into a standard machine readable string representation.
+  // We can use this as the attribute on the time tag on post-detail.ejs
+
   res.render("post-detail", { post: post });
   // post: post will make the post data available on post-detail.ejs
 });
