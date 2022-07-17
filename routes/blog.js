@@ -112,4 +112,24 @@ router.post("/posts", async function (req, res) {
   // This will redirect the users to the posts-list.ejs page.
 });
 
+router.get("/posts/:id", async function (req, res) {
+  const postId = req.params.id;
+  const post = await db
+    .getDb()
+    .collection("posts")
+    .findOne({ _id: new ObjectId(postId) }, { summary: 0 });
+  // This is how we connect the url on <a class="btn" href="/posts/<%= post._id %>">View Post</a>
+  // to an actual route.
+  // {_id: new ObjectId(postId)} parameter will find the matching document to the id.
+  // { summary: 0} will exclude summary from the data that is fetched and include all the other data.
+  // We need to exclude summary as we don't need that data on post-detail.ejs file.
+  if (!post) {
+    return res.status(404).render("404");
+  }
+  // This will handle the case when a user enter an url that doesn't exist.
+
+  res.render("post-detail", { post: post });
+  // post: post will make the post data available on post-detail.ejs
+});
+
 module.exports = router;

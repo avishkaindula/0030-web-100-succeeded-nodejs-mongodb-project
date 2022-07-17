@@ -52,5 +52,12 @@
 }
 
 #body {
-  white-space: pre-wrap; /* This ensures that line breaks and whitespace are kept */
+  white-space: pre-wrap;
+  /* This ensures that line breaks and whitespace are kept */
+  /* This is a built in property that allows us to control the browsers behavior when it */
+  /* comes to dealing with white space and line breaks */
+  /* When we add user generated data, we need to set the value to pre-wrap */
+  /* It will make sure that white space and line breaks are preserved. */
+  /* So if we break the paragraph by typing the "enter" button, */
+  /* pre-wrap will output that data with also the line break. */
 }

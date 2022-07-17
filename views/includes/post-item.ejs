@@ -9,6 +9,8 @@
   <div class="post-actions">
     <button class="btn btn-alt">Delete Post</button>
     <a href="...">Edit Post</a>
-    <a class="btn" href="...">View Post</a>
+    <a class="btn" href="/posts/<%= post._id %>">View Post</a>
+    <!-- post._id will create a unique id for each post url. -->
+    <!-- Now we need to create a route and render post-detail.ejs file from blog.js -->
   </div>
 </article>

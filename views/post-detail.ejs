@@ -1,23 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <%- include('includes/head', { title: 'Post title' }) %>
+    <link rel="stylesheet" href="/styles/posts.css" />
+  </head>
 
-<head>
-  <%- include('includes/head', { title: 'Post title' }) %>
-  <link rel="stylesheet" href="/styles/posts.css">
-</head>
-
-<body>
-  <%- include('includes/header') %>
-  <main id="post-detail">
-    <h1>...</h1>
-    <section id="post-meta">
-      ...
-    </section>
-    <hr>
-    <section>
-      <p id="body">...</p>
-    </section>
-  </main>
-</body>
-
+  <body>
+    <%- include('includes/header') %>
+    <main id="post-detail">
+      <h1><%= post.title %></h1>
+      <section id="post-meta">
+        <!-- We need to show the author name and the date in here. -->
+        <!-- And when we click on the author name, the mail client will be opened and -->
+        <!-- it will start sending an email to the email address we've defined on the authors table. -->
+        <address>
+          <!-- the address HTML element is used when we want to output address information. (like email addresses) -->
+          <a href="mailto:<%= post.author.email %>"><%= post.author.name %></a>
+          <!-- mailto: is a keyword that's used to open the mail client automatically. -->
+          <!-- author_email and author_name are alias we defined on the sql query on the "/posts/:id" router. -->
+        </address>
+        | <time datetime="<%= post.title %>"><%= post.date%></time>
+        <!-- We need to add | before creating the time element. -->
+        <!-- "time" is an element used to output datetime information. -->
+        <!-- datetime= attribute will hold the "machine readable" date -->
+      </section>
+      <hr />
+      <section>
+        <p id="body"><%= post.body %></p>
+        <!-- This is how we output the body of the post. -->
+        <!-- #id has pre-wrap property applied to it on posts.css -->
+      </section>
+    </main>
+  </body>
 </html>
