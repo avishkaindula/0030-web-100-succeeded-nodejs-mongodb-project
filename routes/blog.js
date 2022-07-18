@@ -137,7 +137,7 @@ router.get("/posts/:id", async function (req, res) {
     month: "long",
     day: "numeric",
   });
-  // In order to create a human readable date, We should create a new method for 
+  // In order to create a human readable date, We should create a new method for
   // post. named .humanReadableDate like this.
   // We can refer MDN Docs to find out which values support which keys.
   // post.date in post.date.toLocaleDateString is the original date data stored in posts documents.
@@ -149,6 +149,54 @@ router.get("/posts/:id", async function (req, res) {
 
   res.render("post-detail", { post: post });
   // post: post will make the post data available on post-detail.ejs
+});
+
+router.get("/posts/:id/edit", async function (req, res) {
+  const postId = req.params.id;
+  const post = await db
+    .getDb()
+    .collection("posts")
+    .findOne({ _id: new ObjectId(postId) }, { title: 1, summary: 1, body: 1 });
+  // This is how we connect the url on <a href="/posts/<%= post._id %>/edit">
+  // to an actual route.
+  // {_id: new ObjectId(postId)} parameter will find the matching document to the id.
+  // We don't need to include author data and date here. So we don't add 1 to those data.
+  // Because we shouldn't have the privilege edit the author from this edit page.
+
+  if (!post) {
+    return res.status(404).render("404");
+  }
+  // This will handle the case when a user enter an url that doesn't exist.
+
+  res.render("update-post", { post: post });
+  // post: post will make the post data available on update-post.ejs
+});
+
+router.post("/posts/:id", async function (req, res) {
+  const postId = new ObjectId(req.params.id);
+  // This will extract the id from the post request sent through update-post.ejs
+  const result = await db
+    .getDb()
+    .collection("posts")
+    .updateOne(
+      { _id: postId },
+      {
+        $set: {
+          title: req.body.title,
+          summary: req.body.summary,
+          body: req.body.content,
+          date: new Date(),
+        },
+        // $set: is the keyword used to update MongoDB Documents.
+        // .title, .summary, .content are the name attributes we've given to the form on update-post.ejs
+        // This is how we update the MongoDB document from the data we extracted from update-post.ejs
+        // This will also update the date from the time that post was updated.
+      }
+    );
+  // There's no actual use case of const "result" as the purpose here is to update the document through the
+  // query written inside that constant.
+  res.redirect("/posts");
+  // Since this is a post route, we need to redirect the user like this.
 });
 
 module.exports = router;
