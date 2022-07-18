@@ -7,7 +7,12 @@
   <!-- As we have duplicated the authors data into the posts collection -->
   <p><%= post.summary %></p>
   <div class="post-actions">
-    <button class="btn btn-alt">Delete Post</button>
+    <form action="/posts/<%= post._id %>/delete " method="POST">
+      <button class="btn btn-alt">Delete Post</button>
+    </form>
+    <!-- We should wrap the button inside a form tag to add a action link and connect  -->
+    <!-- it to a route on blog.js -->
+    <!-- Method is POST for deleting to. -->
     <a href="/posts/<%= post._id %>/edit">Edit Post</a>
     <a class="btn" href="/posts/<%= post._id %>">View Post</a>
     <!-- post._id will create a unique id for each post url. -->

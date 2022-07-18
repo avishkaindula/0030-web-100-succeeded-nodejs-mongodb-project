@@ -199,4 +199,14 @@ router.post("/posts/:id", async function (req, res) {
   // Since this is a post route, we need to redirect the user like this.
 });
 
+router.post("/posts/:id/delete", async function (req, res) {
+  const postId = new ObjectId(req.params.id);
+  const result = await db
+    .getDb()
+    .collection("posts")
+    .deleteOne({ _id: postId });
+
+  res.redirect("/posts");
+});
+
 module.exports = router;
