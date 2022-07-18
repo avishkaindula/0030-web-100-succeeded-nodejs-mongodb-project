@@ -112,12 +112,41 @@ router.post("/posts", async function (req, res) {
   // This will redirect the users to the posts-list.ejs page.
 });
 
-router.get("/posts/:id", async function (req, res) {
-  const postId = req.params.id;
+router.get("/posts/:id", async function (req, res, next) {
+  let postId = req.params.id;
+
+  try {
+    postId = new ObjectId(postId);
+  } catch (error) {
+    // return res.status(404).render("404");
+    // We can either throw a 404 error like shown above or
+    // we can make the default error handling middleware on app.js become active.
+    // For that we can use a third parameter on this async function called "next"
+    // Express provide this "next" parameter for all the middleware functions and the route handling functions
+    // route functions are also middleware functions in the end
+    return next(error);
+    // next will move the request on to the "next" middleware in line.
+    // We should also add (error) between parenthesis.
+    // So the above code will execute the default error handling middleware on app.js
+    // return will ensure that the code below won't get executed thereafter.
+    // So now if someone enter a wrong id manually on the address bar on the browser,
+    // The default error handling middleware on the app.js will show up.
+    // So this will now show the 500.ejs file if someone enters a wrong id manually.
+  }
+  // The ObjectId creation part below will throw an error and crashes if a invalid id was inserted
+  // manually through the address bar on the browser.
+  // The default error handling middleware on app.js won't become active to catch this error.
+  // So we can prevent this by using try catch like this.
+  // We should manually handle all possible errors that could occur in any of the other route handlers as well
+  // So we need to repeat this code in all the other places where an ObjectId was created.
+  // But I haven't done this here as it's some extra work to be done.
+  // But if we create a real world project, we should be aware to handle all possible errors manually. 
+
   const post = await db
     .getDb()
     .collection("posts")
-    .findOne({ _id: new ObjectId(postId) }, { summary: 0 });
+    .findOne({ _id: postId }, { summary: 0 });
+  // .findOne({ _id: new ObjectId(postId) }, { summary: 0 });
   // This is how we connect the url on <a class="btn" href="/posts/<%= post._id %>">View Post</a>
   // to an actual route.
   // {_id: new ObjectId(postId)} parameter will find the matching document to the id.

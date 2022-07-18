@@ -23,6 +23,9 @@ app.use(function (error, req, res, next) {
   console.log(error);
   res.status(500).render("500");
 });
+// This is the "default error handling middleware."
+// This default error handling middleware won't catch the errors caused by the async 
+// route middleware functions created on the blog.js file. Instead the server crashes.
 
 // This is how we connect to the database===========================================================
 db.connectToDatabase().then(function () {
